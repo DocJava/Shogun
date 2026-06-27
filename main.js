@@ -42,6 +42,11 @@
     // Set initial save point
     savePoint = story.state.toJson();
 
+    // EXTERNAL: binding
+    story.BindExternalFunction ("roll_dice", () => {
+        return rollDice();
+    });
+
     // Kick off the start of the story!
     continueStory(true);
 
@@ -107,7 +112,7 @@
                     }
 
                     showAfter(delay, imageElement);
-                    delay += 200.0;
+                    delay += 500.0;
                 }
 
                 // LINK: url
@@ -434,6 +439,62 @@
             document.body.classList.add("switched");
             document.body.classList.toggle("dark");
         });
+
+        // Nuovo pulsante in alto a destra: personaggio
+        let charEl = document.getElementById("char");
+        if (charEl) charEl.addEventListener("click", function(event) {
+            //story.variablesState["testing"] = 5;          // -> COME SETTARE UNA VARIABILE INK
+            //var example = story.variablesState["testing"];  // -> COME LEGGERE UNA VARIABILE INK
+            
+            // Update di tutte le variabili da mostrare
+            updateVariable("UI_Gi",story.variablesState["UI_Gi"]);
+            updateVariable("UI_Yu",story.variablesState["UI_Yu"]);
+            updateVariable("UI_Jin",story.variablesState["UI_Jin"]);
+            updateVariable("UI_Rei",story.variablesState["UI_Rei"]);
+            updateVariable("UI_Makoto",story.variablesState["UI_Makoto"]);
+            updateVariable("UI_Meiyo",story.variablesState["UI_Meiyo"]);
+            updateVariable("UI_Chugi",story.variablesState["UI_Chugi"]);
+            updateVariable("UI_Htp",story.variablesState["UI_Htp"]);
+            updateVariable("UI_Ki",story.variablesState["UI_Ki"]);
+            updateVariable("UI_Pro",story.variablesState["UI_Pro"]);
+            updateVariable("UI_Dmg",story.variablesState["UI_Dmg"]);
+
+            viewStats();
+        });
+
+        // Nuovo pulsante in alto a destra: inventario
+        let invEl = document.getElementById("inv");
+        if (invEl) invEl.addEventListener("click", function(event) {
+            //var returnValue = _inkStory.EvaluateFunction("inventory", out textOutput, params);
+            let param1 = "output";
+            let result = story.EvaluateFunction("inventory", [param1], true);
+            alert(result.output);
+            console.log("Returned value:", result.returned);
+            console.log("Any output text:", result.output);  // Any printed text from Ink
+        });
+
     }
+
+
+    // Gestione Variabili UI : update di tutte le variabili osservate
+    /*
+    story.ObserveVariable ("UI_Gi", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Yu", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Jin", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Rei", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Makoto", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Meiyo", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Chugi", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Htp", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Ki", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Pro", (varName,newValue) => {updateVariable(varName,newValue)});
+    story.ObserveVariable ("UI_Dmg", (varName,newValue) => {updateVariable(varName,newValue)});
+    */
+
+    function updateVariable(varName, newValue) {
+        let varEl = document.getElementById(varName);
+        varEl.innerHTML = newValue;
+    }
+
 
 })(storyContent);

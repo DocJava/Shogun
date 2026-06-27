@@ -13,10 +13,13 @@
 
 <body>
 
-    <div class="outerContainer">
+   <!-- Questo è il container della storia Ink -->
+   <div class="outerContainer">
         <h3 class="written-in-ink"><a href="https://www.inklestudios.com/ink">WRITTEN IN INK</a></h3>
 
         <div id="controls" class="buttons">
+          <a id="char" title="Character">char</a> <!-- nuovo pulsante: personaggio -->
+          <a id="inv" title="Inventory">inv</a> <!-- nuovo pulsante: inventario -->
           <a id="rewind" title="Restart story from beginning">restart</a>
           <a id="save" title="Save progress">save</a>
           <a id="reload" title="Reload from save point">load</a>
@@ -31,10 +34,44 @@
         </div>
     </div>
 
-    <audio id="bgMusic" src="bgm.mp3" loop></audio>
+    <!-- Questo è il container per il dado -->
+    <div id="dice-popup">
+        <div id="cubeWrapper">
+            <div id="cube" class="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questo è il container per tutte le statistiche -->
+    <div id ="stats-popup">
+        <div id="stats-panel">      
+            <h2 id="stats-title">Statistiche Bushido</h2>       
+            <div id="stats-grid">
+                <div class="stat-label"><img src="images/Gi.png" width="50px" height="50px"></div><div class="stat-name">Gi</div><div class="stat-value" id="UI_Gi">0</div>
+                <div class="stat-label"><img src="images/Yu.png" width="50px" height="50px"></div><div class="stat-name">Yu</div><div class="stat-value" id="UI_Yu">0</div>
+                <div class="stat-label"><img src="images/Jin.png" width="50px" height="50px"></div><div class="stat-name">Jin</div><div class="stat-value" id="UI_Jin">0</div>
+                <div class="stat-label"><img src="images/Rei.png" width="50px" height="50px"></div><div class="stat-name">Rei</div><div class="stat-value" id="UI_Rei">0</div>
+                <div class="stat-label"><img src="images/Makoto.png" width="50px" height="50px"></div><div class="stat-name">Makoto</div><div class="stat-value" id="UI_Makoto">0</div>
+                <div class="stat-label"><img src="images/Meiyo.png" width="50px" height="50px"></div><div class="stat-name">Meiyo</div><div class="stat-value" id="UI_Meiyo">0</div>
+                <div class="stat-label"><img src="images/Chugi.png" width="50px" height="50px"></div><div class="stat-name">Chugi</div><div class="stat-value" id="UI_Chugi">0</div>
+                <div class="stat-label"><img src="images/d1.png" width="50px" height="50px"></div><div class="stat-name">Salute</div><div class="stat-value" id="UI_Htp">0</div>
+                <div class="stat-label"><img src="images/d2.png" width="50px" height="50px"></div><div class="stat-name">Ki</div><div class="stat-value" id="UI_Ki">0</div>
+                <div class="stat-label"><img src="images/d3.png" width="50px" height="50px"></div><div class="stat-name">Difesa</div><div class="stat-value" id="UI_Pro">0</div>
+                <div class="stat-label"><img src="images/d4.png" width="50px" height="50px"></div><div class="stat-name">Danno</div><div class="stat-value" id="UI_Dmg">0</div>
+            </div>
+        </div>  
+    </div>
+
 
     <script src="ink.js"></script>
     <script src="Shogun.js"></script>
+    <script src="rolldice.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
