@@ -48,8 +48,31 @@
         </div>
     </div>
 
-    <!-- Questo è il container per tutte le statistiche -->
+    <!-- Questo è il container per tutte le statistiche di gioco -->
     <div id ="stats-popup">
+    
+        <!-- Questo è il container per il tempo nel gioco -->
+        <div id="edo-clock-popup">
+            <div id="edo-clock-panel">
+                <div id="edo-clock">
+                    <div id="edo-clock-day">
+                        <img id="edo-sky-dawn" src="images/sky-dawn.jpg" class="edo-sky">
+                        <img id="edo-sky-day" src="images/sky-day.jpg" class="edo-sky">
+                        <img id="edo-sky-dusk" src="images/sky-dusk.jpg" class="edo-sky">
+                        <img id="edo-sky-night" src="images/sky-night.jpg" class="edo-sky">
+                    </div>
+                    <div id="edo-clock-night"></div>
+                    <div id="edo-orbit-sun">
+                        <img id="edo-sun" src="images/sun.png">
+                    </div>
+                    <div id="edo-orbit-moon">
+                        <img id="edo-moon" src="images/moon.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questo è il container per le statistiche personaggio -->
         <div id="stats-panel">      
             <h2 id="stats-title">Statistiche Bushido</h2>       
             <div id="stats-grid">
@@ -60,13 +83,23 @@
                 <div class="stat-label"><img src="images/Makoto.png" width="50px" height="50px"></div><div class="stat-name">Makoto</div><div class="stat-value" id="UI_Makoto">0</div>
                 <div class="stat-label"><img src="images/Meiyo.png" width="50px" height="50px"></div><div class="stat-name">Meiyo</div><div class="stat-value" id="UI_Meiyo">0</div>
                 <div class="stat-label"><img src="images/Chugi.png" width="50px" height="50px"></div><div class="stat-name">Chugi</div><div class="stat-value" id="UI_Chugi">0</div>
-                <div class="stat-label"><img src="images/d1.png" width="50px" height="50px"></div><div class="stat-name">Salute</div><div class="stat-value" id="UI_Htp">0</div>
-                <div class="stat-label"><img src="images/d2.png" width="50px" height="50px"></div><div class="stat-name">Ki</div><div class="stat-value" id="UI_Ki">0</div>
-                <div class="stat-label"><img src="images/d3.png" width="50px" height="50px"></div><div class="stat-name">Difesa</div><div class="stat-value" id="UI_Pro">0</div>
-                <div class="stat-label"><img src="images/d4.png" width="50px" height="50px"></div><div class="stat-name">Danno</div><div class="stat-value" id="UI_Dmg">0</div>
+                <div class="stat-label"><img src="images/Htp.png" width="50px" height="50px"></div><div class="stat-name">Salute</div><div class="stat-value" id="UI_Htp">0</div>
+                <div class="stat-label"><img src="images/Ki.png" width="50px" height="50px"></div><div class="stat-name">Ki</div><div class="stat-value" id="UI_Ki">0</div>
+                <div class="stat-label"><img src="images/Pro.png" width="50px" height="50px"></div><div class="stat-name">Difesa</div><div class="stat-value" id="UI_Pro">0</div>
+                <div class="stat-label"><img src="images/Dmg.png" width="50px" height="50px"></div><div class="stat-name">Danno</div><div class="stat-value" id="UI_Dmg">0</div>
             </div>
-        </div>  
+        </div>
+
     </div>
+
+    
+	<!-- Questo è il container per l'inventario -->
+    <div id="inv-popup">
+       <div id="inv-panel">      
+            <h2 id="inv-title">Inventario</h2>      
+            <w id="inventory"></w>       
+        </div>
+	</div>
 
 
     <script src="ink.js"></script>

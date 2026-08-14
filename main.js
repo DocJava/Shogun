@@ -440,12 +440,17 @@
             document.body.classList.toggle("dark");
         });
 
-        // Nuovo pulsante in alto a destra: personaggio
+        // Nuovo pulsante in alto a destra: personaggio e tempo
         let charEl = document.getElementById("char");
         if (charEl) charEl.addEventListener("click", function(event) {
+            
             //story.variablesState["testing"] = 5;          // -> COME SETTARE UNA VARIABILE INK
             //var example = story.variablesState["testing"];  // -> COME LEGGERE UNA VARIABILE INK
             
+            var target = (story.variablesState["hourOfDay"]*60) + story.variablesState["hour_fraction"];
+            if (edoTime>target)
+                target += 1440;
+
             // Update di tutte le variabili da mostrare
             updateVariable("UI_Gi",story.variablesState["UI_Gi"]);
             updateVariable("UI_Yu",story.variablesState["UI_Yu"]);
@@ -460,6 +465,8 @@
             updateVariable("UI_Dmg",story.variablesState["UI_Dmg"]);
 
             viewStats();
+            advanceEdoClock(edoTime,target-edoTime,5);
+
         });
 
         // Nuovo pulsante in alto a destra: inventario
@@ -468,8 +475,9 @@
             //var returnValue = _inkStory.EvaluateFunction("inventory", out textOutput, params);
             let param1 = "output";
             let result = story.EvaluateFunction("inventory", [param1], true);
-            alert(result.output);
-            console.log("Returned value:", result.returned);
+            //alert(result.output);
+            viewInventory(result.output);
+			console.log("Returned value:", result.returned);
             console.log("Any output text:", result.output);  // Any printed text from Ink
         });
 
