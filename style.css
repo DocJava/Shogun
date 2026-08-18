@@ -3,6 +3,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
 
+:root {
+    --font-weight: 550;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     font-weight: lighter;
@@ -127,7 +131,7 @@ p {
     font-size: 13pt;
     color: #888;
     line-height: 1.7em;
-    font-weight: light; /* bold? lighter? */
+    font-weight: var(--font-weight); /* light = 400, bold = 550 lighter = 300 */
 }
 
 a {
@@ -138,8 +142,8 @@ a {
 }
 
 w {
-	font-size: 14pt;
-	color: grey;
+	font-size: 18pt;
+	color: #454545;
 	font-family: "Caveat";
 	font-weight: light;
 }
@@ -223,6 +227,7 @@ img {
     The End # CLASS: end
 */
 .end {
+    font-size: 16pt;
     text-align: center;
     font-weight: bold;
     color: black;
@@ -234,7 +239,32 @@ img {
     text-align: center;
     font-style: italic;
     color: grey;
+
+
+    
+    background-color: #EBEBEB;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 10px;         
+    padding-right: 10px;         
+    border-radius: 10px;        
+    
+    display: block;             
+    width: fit-content;         
+    margin: 0 auto;             
+    text-align: center;
+
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    
 }
+
+
+@media screen and (prefers-reduced-motion: no-preference) {
+    .switched .info {
+        transition: background-color 0.6s, opacity 0.6s;
+    }
+}
+
 
 .tutorial {
     text-align: left;
@@ -337,6 +367,12 @@ body.dark {
 
 .dark #controls {
     background: black;
+}
+
+
+.dark .info {
+    background-color: #252525;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.25);
 }
 
 

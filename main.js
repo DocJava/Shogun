@@ -377,8 +377,11 @@
 
         // load theme from browser memory
         var savedTheme;
+        var fontWeight;
+
         try {
             savedTheme = window.localStorage.getItem('theme');
+            fontWeight = window.localStorage.getItem('fontWeight');
         } catch (e) {
             console.debug("Couldn't load saved theme");
         }
@@ -390,6 +393,9 @@
             || (savedTheme == undefined && globalTagTheme === "dark")
             || (savedTheme == undefined && globalTagTheme == undefined && browserDark))
             document.body.classList.add("dark");
+
+        document.documentElement.style.setProperty('--font-weight', fontWeight);
+
     }
 
     // Used to hook up the functionality for global functionality buttons
@@ -409,6 +415,10 @@
                 window.localStorage.setItem('save-state', savePoint);
                 document.getElementById("reload").removeAttribute("disabled");
                 window.localStorage.setItem('theme', document.body.classList.contains("dark") ? "dark" : "");
+
+                const rootStyles = window.getComputedStyle(document.documentElement);
+                window.localStorage.setItem('fontWeight', rootStyles.getPropertyValue('--font-weight').trim());    
+
             } catch (e) {
                 console.warn("Couldn't save state");
             }
@@ -477,8 +487,23 @@
             let result = story.EvaluateFunction("inventory", [param1], true);
             //alert(result.output);
             viewInventory(result.output);
-			console.log("Returned value:", result.returned);
-            console.log("Any output text:", result.output);  // Any printed text from Ink
+			//console.log("Returned value:", result.returned);
+            //console.log("Any output text:", result.output);  // Any printed text from Ink
+        });
+
+        // Nuovo pulsante in alto a destra: font
+        let fontEl = document.getElementById("font-switch");
+        if (fontEl) fontEl.addEventListener("click", function(event) {
+
+            const rootStyles = window.getComputedStyle(document.documentElement);
+            let fontWeight = rootStyles.getPropertyValue('--font-weight').trim();
+
+            if (fontWeight == 550) {
+                fontWeight = 400;
+            } else {
+                fontWeight = 550;
+            }
+            document.documentElement.style.setProperty('--font-weight', fontWeight)
         });
 
     }

@@ -101,13 +101,13 @@
 
   function viewInventory(output) {
     
-	// Show the inventory
-	const invSheet = document.getElementById('inventory');
-	invSheet.innerHTML = output.replace(/\n/g, "<br>");
+		// Show the inventory
+		const invSheet = document.getElementById('inventory');
+		invSheet.innerHTML = output.replace(/\n/g, "<br>");
 	
-	// Fade in del popup
+		// Fade in del popup
     invPopup.style.opacity = "1";
-	invPopup.style.pointerEvents = "auto";
+		invPopup.style.pointerEvents = "auto";
 
     pendingInv = () => {
 		// Fade-out del popup
@@ -141,7 +141,8 @@
 
 		edoTimer = setInterval(() => {
 			
-			edoTime += edoSpeed;
+			//edoTime += edoSpeed;	// --> questo se l'orologio si deve spostare ...
+			edoTime = endValue;			// --> questo se l'orologio deve raggiungere il target subito	
 
 			updateEdoClock();
 
