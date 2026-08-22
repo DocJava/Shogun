@@ -1,7 +1,10 @@
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,700|Quattrocento:700');
+/*@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,700|Quattrocento:700');
 
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');*/
+
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Quattrocento:wght@400;700&display=swap');
 
 :root {
     --font-weight: 550;
@@ -23,8 +26,8 @@ body {
 h1,
 h2 {
     text-align: center;
-    /*font-family: "Quattrocento", Georgia, 'Times New Roman', Times, serif;*/
-    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', Times, serif;
+    font-family: "Quattrocento", Georgia, 'Times New Roman', Times, serif;
+    /*font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', Times, serif;*/
     margin: 0;
     padding: 0;
 }
@@ -132,6 +135,8 @@ p {
     color: #888;
     line-height: 1.7em;
     font-weight: var(--font-weight); /* light = 400, bold = 550 lighter = 300 */
+
+    transition: font-weight 0.5s ease;
 }
 
 a {
@@ -181,6 +186,10 @@ img {
     max-width: 80%;
 }
 
+.container img:not(.no-radius) {
+    border-radius: 25px;    
+}
+
 .container .hide {
     opacity: 0.0;
 }
@@ -207,6 +216,37 @@ img {
     text-align: center;
     line-height: 1.7em;
 }
+
+/*
+  Class applied to "forward" choice 
+*/
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+.icon-pulse {
+  animation: pulse 5.0s infinite ease-in-out;
+}
+
 
 /* 
   Class applied to first choice
@@ -240,8 +280,6 @@ img {
     font-style: italic;
     color: grey;
 
-
-    
     background-color: #EBEBEB;
     padding-bottom: 5px;
     padding-top: 5px;
@@ -255,7 +293,6 @@ img {
     text-align: center;
 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    
 }
 
 
@@ -267,7 +304,8 @@ img {
 
 
 .tutorial {
-    text-align: left;
+    padding: 10px;
+    text-align: center;
     font-size: 8pt;
     font-weight: bold;
     color: black;
@@ -308,6 +346,13 @@ img {
         right: 0;
     }
 }
+
+.inline-icon {
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+}
+
 
 /* 
   Dark Theme (Added in Inky 0.10.0)
@@ -478,7 +523,6 @@ body.dark {
     color: #3a2f1f;
     text-align: left;
     line-height: 50px;
-      
   }
  
   .stat-value {
@@ -486,7 +530,6 @@ body.dark {
     color: #2a1f14;
     text-align: left;
     line-height: 50px;
-    
   }
 
 
@@ -547,13 +590,8 @@ body.dark {
   .bottom { transform: rotateX(-90deg) translateZ(40px); }
 
 
-/* Bottom watch styles */
+/* Watch styles */
 #edo-clock-popup {
-  /*position: fixed;
-  bottom: 0px;
-  left: 10%;
-  /*transform: translateX(-50%);*/
-  /*pointer-events: none;*/
   z-index: 9998;
 }
 
@@ -561,18 +599,7 @@ body.dark {
   padding-top: 20px;
   text-align: center;
   font-family: "Noto Serif JP", serif;
-  /*   
-  transform: scale(0.3);
-  transform-origin: bottom center;
-  transition: transform 0.25s ease-out;
-  /*pointer-events: auto;*/
 }
-
-/*
-#edo-clock-panel:hover {
-  transform: scale(1.0);
-}
-*/
 
 #edo-clock {
   position: relative;

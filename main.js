@@ -79,17 +79,40 @@
 
                 // AUDIO: src
                 if( splitTag && splitTag.property == "AUDIO" ) {
-                  if('audio' in this) {
-                    this.audio.pause();
-                    this.audio.removeAttribute('src');
-                    this.audio.load();
-                  }
-                  this.audio = new Audio(splitTag.val);
-                  this.audio.play();
+                    
+                    /*
+                    if ('audio' in this) {
+                        console.log("fadeout begin");
+                        fadeOutAudio(this.audio, splitTag.val, false);
+                    } else {
+                        console.log("fadein begin");
+                        this.audio = new Audio(splitTag.val);
+                        fadeInAudio(this.audio, splitTag.val, false);
+                    }
+                    */
+
+                  
+                    if('audio' in this) {
+                        this.audio.pause();
+                        this.audio.removeAttribute('src');
+                        this.audio.load();
+                    }
+                    this.audio = new Audio(splitTag.val);
+                    this.audio.play();
+
                 }
 
                 // AUDIOLOOP: src
                 else if( splitTag && splitTag.property == "AUDIOLOOP" ) {
+                  
+                    if ('audioloop' in this) {
+                        fadeOutAudio(this.audioloop, splitTag.val, true);
+                    } else {
+                        this.audioloop = new Audio(splitTag.val);
+                        fadeInAudio(this.audioloop, splitTag.val, true);
+                    }
+
+                /*        
                   if('audioLoop' in this) {
                     this.audioLoop.pause();
                     this.audioLoop.removeAttribute('src');
@@ -98,6 +121,8 @@
                   this.audioLoop = new Audio(splitTag.val);
                   this.audioLoop.play();
                   this.audioLoop.loop = true;
+                */
+
                 }
 
                 // IMAGE: src
@@ -177,6 +202,7 @@
             var choiceTags = choice.tags;
             var customClasses = [];
             var isClickable = true;
+            
             for(var i=0; i<choiceTags.length; i++) {
                 var choiceTag = choiceTags[i];
                 var splitTag = splitPropertyTag(choiceTag);
@@ -200,7 +226,11 @@
                 choiceParagraphElement.classList.add(customClasses[i]);
 
             if(isClickable){
-                choiceParagraphElement.innerHTML = `<a href='#'>${choice.text}</a>`
+                if (choice.text === 'XXX') {
+                    choiceParagraphElement.innerHTML = `<a href='#'><img class="inline-icon icon-pulse no-radius" src="images/forward.png"></a>`
+                }else{
+                    choiceParagraphElement.innerHTML = `<a href='#'>${choice.text}</a>`
+                }
             }else{
                 choiceParagraphElement.innerHTML = `<span class='unclickable'>${choice.text}</span>`
             }
@@ -471,8 +501,9 @@
             updateVariable("UI_Chugi",story.variablesState["UI_Chugi"]);
             updateVariable("UI_Htp",story.variablesState["UI_Htp"]);
             updateVariable("UI_Ki",story.variablesState["UI_Ki"]);
-            updateVariable("UI_Pro",story.variablesState["UI_Pro"]);
             updateVariable("UI_Dmg",story.variablesState["UI_Dmg"]);
+            updateVariable("UI_Vel",story.variablesState["UI_Vel"]);
+            updateVariable("UI_Pro",story.variablesState["UI_Pro"]);
 
             viewStats();
             advanceEdoClock(edoTime,target-edoTime,5);
@@ -485,23 +516,20 @@
             //var returnValue = _inkStory.EvaluateFunction("inventory", out textOutput, params);
             let param1 = "output";
             let result = story.EvaluateFunction("inventory", [param1], true);
-            //alert(result.output);
             viewInventory(result.output);
 			//console.log("Returned value:", result.returned);
             //console.log("Any output text:", result.output);  // Any printed text from Ink
         });
 
-        // Nuovo pulsante in alto a destra: font
+        // Nuovo pulsante in alto a destra: font weight
         let fontEl = document.getElementById("font-switch");
         if (fontEl) fontEl.addEventListener("click", function(event) {
 
             const rootStyles = window.getComputedStyle(document.documentElement);
-            let fontWeight = rootStyles.getPropertyValue('--font-weight').trim();
-
-            if (fontWeight == 550) {
-                fontWeight = 400;
-            } else {
-                fontWeight = 550;
+            let actWeight = rootStyles.getPropertyValue('--font-weight').trim();
+            let fontWeight = parseInt(actWeight,10) + 50;    
+            if (fontWeight > 800) {
+                fontWeight = 300;
             }
             document.documentElement.style.setProperty('--font-weight', fontWeight)
         });
@@ -524,9 +552,45 @@
     story.ObserveVariable ("UI_Dmg", (varName,newValue) => {updateVariable(varName,newValue)});
     */
 
+    // Used to update an Ink variable and show its value
     function updateVariable(varName, newValue) {
         let varEl = document.getElementById(varName);
         varEl.innerHTML = newValue;
+    }
+
+    // Used to fade-out & fade-in audio (2s)
+    function fadeOutAudio(audioElement, tagValue, loop) {
+        let timer = setInterval(function () {
+            if (audioElement.volume > 0) {
+                audioElement.volume = Math.max(0,audioElement.volume-0.05);
+                console.log(tagValue + " " + audioElement.volume);
+            } else {
+                clearInterval(timer);
+                audioElement.volume = 0;
+                audioElement.pause();
+                audioElement.removeAttribute('src');
+                audioElement.load();
+                audioElement.src = tagValue;
+                fadeInAudio(audioElement, tagValue, loop);
+            }
+        }, 100); // Test every 100ms           
+     }
+
+    // Used to fade-in audio (2s)
+    function fadeInAudio(audioElement, tagValue, loop) {
+
+        //this.audio = new Audio(tagValue);
+        audioElement.volume = 0;
+        audioElement.play();
+        audioElement.loop = loop;
+        let timer = setInterval(function () {
+            if (audioElement.volume < 1.0) {
+                audioElement.volume = Math.min(1,audioElement.volume+0.05);
+                console.log(tagValue+ " " + audioElement.volume);
+            } else {
+                clearInterval(timer);
+            }
+        }, 100); // Test every 100ms        
     }
 
 
