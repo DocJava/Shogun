@@ -104,12 +104,16 @@
 
                 // AUDIOLOOP: src
                 else if( splitTag && splitTag.property == "AUDIOLOOP" ) {
-                  
-                    if ('audioloop' in this) {
-                        fadeOutAudio(this.audioloop, splitTag.val, true);
+
+                    if (!('audioloop_1' in this)) {
+                        this.audioloop_1 = new Audio();
+                        this.audioloop_2 = new Audio(); 
+                    }
+
+                    if (this.audioloop_1.src == "") {
+                        switchAudio(this.audioloop_1, this.audioloop_2, splitTag.val);        
                     } else {
-                        this.audioloop = new Audio(splitTag.val);
-                        fadeInAudio(this.audioloop, splitTag.val, true);
+                        switchAudio(this.audioloop_2, this.audioloop_1, splitTag.val);
                     }
 
                 /*        
@@ -132,7 +136,7 @@
                     storyContainer.appendChild(imageElement);
 
                     imageElement.onload = () => {
-                        console.log(`scrollingto ${previousBottomEdge}`)
+                        //console.log(`scrollingto ${previousBottomEdge}`)
                         scrollDown(previousBottomEdge)
                     }
 
@@ -558,35 +562,38 @@
         varEl.innerHTML = newValue;
     }
 
-    // Used to fade-out & fade-in audio (2s)
-    function fadeOutAudio(audioElement, tagValue, loop) {
-        let timer = setInterval(function () {
-            if (audioElement.volume > 0) {
-                audioElement.volume = Math.max(0,audioElement.volume-0.05);
-                console.log(tagValue + " " + audioElement.volume);
-            } else {
-                clearInterval(timer);
-                audioElement.volume = 0;
-                audioElement.pause();
-                audioElement.removeAttribute('src');
-                audioElement.load();
-                audioElement.src = tagValue;
-                fadeInAudio(audioElement, tagValue, loop);
-            }
-        }, 100); // Test every 100ms           
+    // Used to switch two audio loops
+    function switchAudio(audioIn, audioOut, tagValue) {
+        fadeOutAudio(audioOut);
+        fadeInAudio(audioIn, tagValue);
+    }
+
+    // Used to fade-out audio loop (2 seconds)
+    function fadeOutAudio(audioElement) {
+        if (audioElement.src != "") {
+            let timer = setInterval(function () {
+                if (audioElement.volume > 0) {
+                    audioElement.volume = Math.max(0,audioElement.volume-0.05);
+                } else {
+                    clearInterval(timer);
+                    audioElement.volume = 0;
+                    audioElement.pause();
+                    audioElement.removeAttribute('src');
+                    audioElement.load();
+                }
+            }, 100); // Test every 100ms
+        }           
      }
 
-    // Used to fade-in audio (2s)
-    function fadeInAudio(audioElement, tagValue, loop) {
-
-        //this.audio = new Audio(tagValue);
+    // Used to fade-in audio loop (2 seconds)
+    function fadeInAudio(audioElement, tagValue) {
         audioElement.volume = 0;
+        audioElement.src = tagValue;
         audioElement.play();
-        audioElement.loop = loop;
+        audioElement.loop = true;
         let timer = setInterval(function () {
             if (audioElement.volume < 1.0) {
                 audioElement.volume = Math.min(1,audioElement.volume+0.05);
-                console.log(tagValue+ " " + audioElement.volume);
             } else {
                 clearInterval(timer);
             }
