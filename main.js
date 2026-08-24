@@ -3,7 +3,10 @@
     // Create ink story from the content using inkjs
     var story = new inkjs.Story(storyContent);
 
+    // Saved settings and story
     var savePoint = "";
+    var saveAudioloop = "";
+    var audioMuted = false;
 
     let savedTheme;
     let globalTagTheme;
@@ -78,43 +81,20 @@
 				splitTag.property = splitTag.property.toUpperCase();
 
                 // AUDIO: src
-                if( splitTag && splitTag.property == "AUDIO" ) {
-                    
-                    /*
-                    if ('audio' in this) {
-                        console.log("fadeout begin");
-                        fadeOutAudio(this.audio, splitTag.val, false);
-                    } else {
-                        console.log("fadein begin");
-                        this.audio = new Audio(splitTag.val);
-                        fadeInAudio(this.audio, splitTag.val, false);
-                    }
-                    */
-
-                  
+                if( splitTag && splitTag.property == "AUDIO" ) {                                      
                     if('audio' in this) {
                         this.audio.pause();
                         this.audio.removeAttribute('src');
                         this.audio.load();
                     }
                     this.audio = new Audio(splitTag.val);
+                    this.audio.volume = 1.0;
                     this.audio.play();
-
                 }
 
                 // AUDIOLOOP: src
-                else if( splitTag && splitTag.property == "AUDIOLOOP" ) {
-
-                    if (!('audioloop_1' in this)) {
-                        this.audioloop_1 = new Audio();
-                        this.audioloop_2 = new Audio(); 
-                    }
-
-                    if (this.audioloop_1.src == "") {
-                        switchAudio(this.audioloop_1, this.audioloop_2, splitTag.val);        
-                    } else {
-                        switchAudio(this.audioloop_2, this.audioloop_1, splitTag.val);
-                    }
+                else if( splitTag && splitTag.property == "AUDIOLOOP" ) {                    
+                    switchAudioloop(splitTag.val);
 
                 /*        
                   if('audioLoop' in this) {
@@ -396,10 +376,13 @@
 
         try {
             let savedState = window.localStorage.getItem('save-state');
-            if (savedState) {
-                story.state.LoadJson(savedState);
-                return true;
-            }
+            let savedAudioloop = window.localStorage.getItem('save-audioloop');
+
+            if (savedState) story.state.LoadJson(savedState);            
+            if (savedAudioloop) switchAudioloop(savedAudioloop);    
+            
+            return true;
+            
         } catch (e) {
             console.debug("Couldn't load save state");
         }
@@ -412,10 +395,12 @@
         // load theme from browser memory
         var savedTheme;
         var fontWeight;
+        var muted;
 
         try {
             savedTheme = window.localStorage.getItem('theme');
             fontWeight = window.localStorage.getItem('fontWeight');
+            muted = window.localStorage.getItem('muted');
         } catch (e) {
             console.debug("Couldn't load saved theme");
         }
@@ -429,7 +414,10 @@
             document.body.classList.add("dark");
 
         document.documentElement.style.setProperty('--font-weight', fontWeight);
-
+        if (muted == "true") {
+            audioMuted = true;
+            muteAudioloop(audioMuted);
+        }
     }
 
     // Used to hook up the functionality for global functionality buttons
@@ -453,6 +441,9 @@
                 const rootStyles = window.getComputedStyle(document.documentElement);
                 window.localStorage.setItem('fontWeight', rootStyles.getPropertyValue('--font-weight').trim());    
 
+                window.localStorage.setItem('save-audioloop', saveAudioloop);
+                window.localStorage.setItem('muted', audioMuted);
+
             } catch (e) {
                 console.warn("Couldn't save state");
             }
@@ -471,7 +462,11 @@
             removeAll("img");
             try {
                 let savedState = window.localStorage.getItem('save-state');
-                if (savedState) story.state.LoadJson(savedState);
+                let savedAudioloop = window.localStorage.getItem('save-audioloop');
+
+                if (savedState) story.state.LoadJson(savedState);               
+                if (savedAudioloop) switchAudioloop(savedAudioloop);
+
             } catch (e) {
                 console.debug("Couldn't load save state");
             }
@@ -538,6 +533,13 @@
             document.documentElement.style.setProperty('--font-weight', fontWeight)
         });
 
+        // Nuovo pulsante in alto a destra: turn on/off audio
+        let audioEl = document.getElementById("audio-switch");
+        if (audioEl) audioEl.addEventListener("click", function(event) {
+            audioMuted = !audioMuted;
+            muteAudioloop(audioMuted);
+        });
+
     }
 
 
@@ -562,13 +564,34 @@
         varEl.innerHTML = newValue;
     }
 
-    // Used to switch two audio loops
-    function switchAudio(audioIn, audioOut, tagValue) {
-        fadeOutAudio(audioOut);
-        fadeInAudio(audioIn, tagValue);
+    // Used to toggle on/off audio
+    function muteAudioloop() {
+        if (!('audioloop_1' in this)) {
+            this.audioloop_1 = new Audio();
+            this.audioloop_2 = new Audio();
+        } 
+        this.audioloop_1.muted = audioMuted;
+        this.audioloop_2.muted = audioMuted;
     }
 
-    // Used to fade-out audio loop (2 seconds)
+    // Used to switch two audio loops
+    function switchAudioloop(tagValue) {
+
+        if (!('audioloop_1' in this)) {
+            this.audioloop_1 = new Audio();
+            this.audioloop_2 = new Audio();
+        } 
+
+        if (this.audioloop_1.src == "") {
+            fadeOutAudio(this.audioloop_2);
+            fadeInAudio(this.audioloop_1, tagValue);
+        } else {
+            fadeOutAudio(this.audioloop_1);
+            fadeInAudio(this.audioloop_2, tagValue);
+        } 
+    }
+
+    // Used to fade-out audio loop (4 seconds)
     function fadeOutAudio(audioElement) {
         if (audioElement.src != "") {
             let timer = setInterval(function () {
@@ -581,24 +604,26 @@
                     audioElement.removeAttribute('src');
                     audioElement.load();
                 }
-            }, 100); // Test every 100ms
+            }, 200); // Test every 200ms
         }           
      }
 
-    // Used to fade-in audio loop (2 seconds)
+    // Used to fade-in audio loop (4 seconds)
     function fadeInAudio(audioElement, tagValue) {
         audioElement.volume = 0;
         audioElement.src = tagValue;
         audioElement.play();
         audioElement.loop = true;
+        saveAudioloop = tagValue;
         let timer = setInterval(function () {
-            if (audioElement.volume < 1.0) {
-                audioElement.volume = Math.min(1,audioElement.volume+0.05);
+            if (audioElement.volume < 0.5) {
+                audioElement.volume = Math.min(0.50,audioElement.volume+0.05);
             } else {
                 clearInterval(timer);
             }
-        }, 100); // Test every 100ms        
+        }, 200); // Test every 200ms        
     }
+
 
 
 })(storyContent);
